@@ -172,10 +172,21 @@ function M.setup(opts)
         ["@tag"] = { fg = c.entity },
         ["@tag.attribute"] = { fg = c.fg },
         ["@tag.delimiter"] = { fg = c.punctuation },
-    }
+          
+    ["@symbol"] = { fg = c.constant },
+    ["@symbol.clojure"] = { fg = c.constant },
+    ["@keyword.clojure"] = { fg = c.constant },
+    ["@namespace"] = { fg = c.entity },
+    ["@function.call"] = { fg = c.fg },
+    ["@method.call"] = { fg = c.fg },
+    ["@type.definition"] = { fg = c.entity },
+    ["@type.qualifier"] = { fg = c.fg },
+    ["@variable.parameter"] = { fg = c.fg },
+    ["@variable.member"] = { fg = c.fg },
+  }
 
-    for group, settings in pairs(highlights) do
-        vim.api.nvim_set_hl(0, group, settings)
+  for group, settings in pairs(highlights) do
+    vim.api.nvim_set_hl(0, group, settings)
     end
 
     vim.g.terminal_color_0 = c.term_black
