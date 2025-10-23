@@ -78,8 +78,19 @@ You can customize the theme with optional settings:
 
 ```lua
 require('alabaster').setup({
+  style = "light",          -- "light" or "dark"
   transparent = false,      -- Enable transparent background
   italic_comments = false,  -- Enable italic comments
+})
+
+vim.cmd.colorscheme('alabaster')
+```
+
+### Dark Mode
+
+```lua
+require('alabaster').setup({
+  style = "dark",
 })
 
 vim.cmd.colorscheme('alabaster')
