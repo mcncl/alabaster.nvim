@@ -455,6 +455,118 @@ function M.setup(opts)
     IblScope = { fg = c.line_number },
     IndentBlanklineChar = { fg = c.line_highlight },
     IndentBlanklineContextChar = { fg = c.line_number },
+
+    -- Neo-tree
+    NeoTreeNormal = { fg = c.fg, bg = bg },
+    NeoTreeNormalNC = { fg = c.fg, bg = bg },
+    NeoTreeDirectoryName = { fg = c.entity },
+    NeoTreeDirectoryIcon = { fg = c.entity },
+    NeoTreeRootName = { fg = c.entity, bold = true },
+    NeoTreeFileName = { fg = c.fg },
+    NeoTreeFileIcon = { fg = c.fg },
+    NeoTreeFileNameOpened = { fg = c.entity },
+    NeoTreeIndentMarker = { fg = c.line_number },
+    NeoTreeGitAdded = { fg = c.string },
+    NeoTreeGitConflict = { fg = c.invalid_fg },
+    NeoTreeGitDeleted = { fg = c.invalid_fg },
+    NeoTreeGitIgnored = { fg = c.line_number },
+    NeoTreeGitModified = { fg = c.info },
+    NeoTreeGitUnstaged = { fg = c.warning },
+    NeoTreeGitUntracked = { fg = c.punctuation },
+    NeoTreeGitStaged = { fg = c.string },
+    NeoTreeFloatBorder = { fg = c.line_number },
+    NeoTreeFloatTitle = { fg = c.entity, bold = true },
+    NeoTreeTitleBar = { fg = c.fg, bg = c.statusline_bg },
+    NeoTreeCursorLine = { bg = c.line_highlight },
+    NeoTreeDimText = { fg = c.line_number },
+    NeoTreeDotfile = { fg = c.line_number },
+    NeoTreeModified = { fg = c.warning },
+    NeoTreeSymbolicLinkTarget = { fg = c.info, underline = true },
+
+    -- Which-key
+    WhichKey = { fg = c.entity },
+    WhichKeyGroup = { fg = c.constant },
+    WhichKeySeparator = { fg = c.punctuation },
+    WhichKeyDesc = { fg = c.fg },
+    WhichKeyValue = { fg = c.punctuation },
+    WhichKeyFloat = { bg = c.line_highlight },
+    WhichKeyBorder = { fg = c.line_number },
+
+    -- Lazy.nvim
+    LazyH1 = { fg = c.bg, bg = c.entity, bold = true },
+    LazyH2 = { fg = c.entity, bold = true },
+    LazyComment = { fg = c.comment },
+    LazyNormal = { fg = c.fg, bg = bg },
+    LazyCommit = { fg = c.punctuation },
+    LazyCommitIssue = { fg = c.constant },
+    LazyCommitType = { fg = c.entity },
+    LazyCommitScope = { fg = c.fg },
+    LazyDimmed = { fg = c.line_number },
+    LazyProp = { fg = c.punctuation },
+    LazyValue = { fg = c.string },
+    LazyReasonCmd = { fg = c.warning },
+    LazyReasonEvent = { fg = c.constant },
+    LazyReasonFt = { fg = c.info },
+    LazyReasonImport = { fg = c.fg },
+    LazyReasonKeys = { fg = c.entity },
+    LazyReasonPlugin = { fg = c.string },
+    LazyReasonRequire = { fg = c.constant },
+    LazyReasonRuntime = { fg = c.warning },
+    LazyReasonSource = { fg = c.info },
+    LazyReasonStart = { fg = c.string },
+    LazySpecial = { fg = c.entity },
+    LazyButton = { fg = c.fg, bg = c.statusline_bg },
+    LazyButtonActive = { fg = c.bg, bg = c.entity, bold = true },
+    LazyProgressDone = { fg = c.string },
+    LazyProgressTodo = { fg = c.line_number },
+
+    -- nvim-notify
+    NotifyERRORBorder = { fg = c.invalid_fg },
+    NotifyERRORIcon = { fg = c.invalid_fg },
+    NotifyERRORTitle = { fg = c.invalid_fg },
+    NotifyERRORBody = { fg = c.fg },
+    NotifyWARNBorder = { fg = c.warning },
+    NotifyWARNIcon = { fg = c.warning },
+    NotifyWARNTitle = { fg = c.warning },
+    NotifyWARNBody = { fg = c.fg },
+    NotifyINFOBorder = { fg = c.info },
+    NotifyINFOIcon = { fg = c.info },
+    NotifyINFOTitle = { fg = c.info },
+    NotifyINFOBody = { fg = c.fg },
+    NotifyDEBUGBorder = { fg = c.punctuation },
+    NotifyDEBUGIcon = { fg = c.punctuation },
+    NotifyDEBUGTitle = { fg = c.punctuation },
+    NotifyDEBUGBody = { fg = c.fg },
+    NotifyTRACEBorder = { fg = c.constant },
+    NotifyTRACEIcon = { fg = c.constant },
+    NotifyTRACETitle = { fg = c.constant },
+    NotifyTRACEBody = { fg = c.fg },
+    NotifyBackground = { bg = bg },
+
+    -- Noice
+    NoiceCmdline = { fg = c.fg },
+    NoiceCmdlineIcon = { fg = c.entity },
+    NoiceCmdlineIconSearch = { fg = c.warning },
+    NoiceCmdlinePopup = { fg = c.fg, bg = c.line_highlight },
+    NoiceCmdlinePopupBorder = { fg = c.line_number },
+    NoiceCmdlinePopupBorderSearch = { fg = c.warning },
+    NoiceCmdlinePrompt = { fg = c.entity },
+    NoiceConfirm = { fg = c.fg, bg = c.line_highlight },
+    NoiceConfirmBorder = { fg = c.line_number },
+    NoiceFormatConfirm = { fg = c.fg },
+    NoiceFormatConfirmDefault = { fg = c.entity },
+    NoiceMini = { fg = c.fg, bg = c.line_highlight },
+    NoicePopup = { fg = c.fg, bg = c.line_highlight },
+    NoicePopupBorder = { fg = c.line_number },
+    NoicePopupmenu = { fg = c.fg, bg = c.line_highlight },
+    NoicePopupmenuBorder = { fg = c.line_number },
+    NoicePopupmenuMatch = { fg = c.entity, bold = true },
+    NoicePopupmenuSelected = { bg = c.selection_highlight },
+    NoiceScrollbar = { fg = c.punctuation },
+    NoiceScrollbarThumb = { bg = c.punctuation },
+    NoiceSplit = { fg = c.fg, bg = bg },
+    NoiceSplitBorder = { fg = c.line_number },
+    NoiceVirtualText = { fg = c.info },
   }
 
   for group, settings in pairs(highlights) do
@@ -477,6 +589,28 @@ function M.setup(opts)
   vim.g.terminal_color_13 = c.term_bright_magenta
   vim.g.terminal_color_14 = c.term_bright_cyan
   vim.g.terminal_color_15 = c.term_bright_white
+
+  -- Create user command
+  vim.api.nvim_create_user_command("Alabaster", function(opts)
+    local arg = opts.args:lower()
+    if arg == "dark" then
+      M.config.style = "dark"
+      M.setup(M.config)
+    elseif arg == "light" then
+      M.config.style = "light"
+      M.setup(M.config)
+    elseif arg == "toggle" then
+      M.config.style = M.config.style == "dark" and "light" or "dark"
+      M.setup(M.config)
+    else
+      print("Alabaster: usage - :Alabaster [dark|light|toggle]")
+    end
+  end, {
+    nargs = 1,
+    complete = function()
+      return { "dark", "light", "toggle" }
+    end,
+  })
 end
 
 return M
