@@ -1,10 +1,38 @@
 local M = {}
 
 M.config = {
-  style = "light",
+  style = nil, -- nil means: check cache, then default to "light"
   transparent = false,
   italic_comments = false,
 }
+
+local function get_cache_path()
+  return vim.fn.stdpath("cache") .. "/alabaster"
+end
+
+local function read_cached_style()
+  local path = get_cache_path()
+  local file = io.open(path, "r")
+  if file then
+    local style = file:read("*l")
+    file:close()
+    if style == "dark" or style == "light" then
+      return style
+    end
+  end
+  return nil
+end
+
+local function write_cached_style(style)
+  local cache_dir = vim.fn.stdpath("cache")
+  vim.fn.mkdir(cache_dir, "p")
+  local path = get_cache_path()
+  local file = io.open(path, "w")
+  if file then
+    file:write(style)
+    file:close()
+  end
+end
 
 M.colors = {
   light = {
@@ -126,9 +154,11 @@ function M.setup(opts)
   vim.g.colors_name = "alabaster"
 
   local cfg = M.config
-  local c = M.colors[cfg.style] or M.colors.light
+  -- Priority: explicit config > cached > default "light"
+  local style = cfg.style or read_cached_style() or "light"
+  local c = M.colors[style] or M.colors.light
 
-  vim.o.background = cfg.style == "dark" and "dark" or "light"
+  vim.o.background = style == "dark" and "dark" or "light"
 
   local bg = cfg.transparent and "NONE" or c.bg
   local comment_style = cfg.italic_comments and { fg = c.comment, italic = true } or { fg = c.comment }
@@ -593,14 +623,19 @@ function M.setup(opts)
   -- Create user command
   vim.api.nvim_create_user_command("Alabaster", function(opts)
     local arg = opts.args:lower()
+    local current_style = M.config.style or read_cached_style() or "light"
     if arg == "dark" then
       M.config.style = "dark"
+      write_cached_style("dark")
       M.setup(M.config)
     elseif arg == "light" then
       M.config.style = "light"
+      write_cached_style("light")
       M.setup(M.config)
     elseif arg == "toggle" then
-      M.config.style = M.config.style == "dark" and "light" or "dark"
+      local new_style = current_style == "dark" and "light" or "dark"
+      M.config.style = new_style
+      write_cached_style(new_style)
       M.setup(M.config)
     else
       print("Alabaster: usage - :Alabaster [dark|light|toggle]")
