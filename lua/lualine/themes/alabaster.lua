@@ -5,7 +5,8 @@ local colors = {
   light = {
     bg = "#F7F7F7",
     fg = "#000000",
-    comment = "#AA3731",
+    comment = "#9DA39A",
+    replace = "#9DA39A",
     string = "#448C27",
     constant = "#7A3E9D",
     entity = "#325CC0",
@@ -18,7 +19,8 @@ local colors = {
   dark = {
     bg = "#0E1415",
     fg = "#CECECE",
-    comment = "#D96468",
+    comment = "#6B7678",
+    replace = "#6B7678",
     string = "#91B362",
     constant = "#B77FDB",
     entity = "#6199D9",
@@ -57,7 +59,7 @@ local function generate_theme()
       c = { fg = c.statusline_fg, bg = c.line_highlight },
     },
     replace = {
-      a = { fg = c.bg, bg = c.comment, gui = "bold" },
+      a = { fg = c.bg, bg = c.replace, gui = "bold" },
       b = { fg = c.fg, bg = c.statusline_bg },
       c = { fg = c.statusline_fg, bg = c.line_highlight },
     },
