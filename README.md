@@ -107,7 +107,7 @@ vim.cmd.colorscheme('alabaster')
 
 - **Background**: `#F7F7F7`
 - **Foreground**: `#000000`
-- **Comments**: `#AA3731` (red)
+- **Comments**: `#9DA39A` (muted gray)
 - **Strings**: `#448C27` (green)
 - **Constants**: `#7A3E9D` (purple)
 - **Functions/Entities**: `#325CC0` (blue)

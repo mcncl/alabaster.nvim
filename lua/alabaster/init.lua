@@ -412,6 +412,7 @@ function M.setup(opts)
     ["@lsp.type.type"] = { fg = c.fg },
     ["@lsp.type.typeParameter"] = { fg = c.entity },
     ["@lsp.type.variable"] = { fg = c.fg },
+    ["@lsp.type.comment"] = { link = "@comment" },
     ["@lsp.mod.deprecated"] = { strikethrough = true },
     ["@lsp.mod.readonly"] = { fg = c.constant },
     ["@lsp.mod.defaultLibrary"] = { link = "@variable.builtin" },
