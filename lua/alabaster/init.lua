@@ -130,7 +130,7 @@ M.colors = {
     term_blue = "#6199D9",
     term_magenta = "#B77FDB",
     term_cyan = "#5AAEBD",
-    term_white = "#CECECE",
+    term_white = "#BBBBBB",
     term_bright_black = "#666666",
     term_bright_red = "#F07178",
     term_bright_green = "#AAD94C",
@@ -150,22 +150,28 @@ function M.setup(opts)
     vim.cmd("syntax reset")
   end
 
-  vim.o.termguicolors = true
   vim.g.colors_name = "alabaster"
 
   local cfg = M.config
-  -- Priority: explicit config > cached > default "light"
-  local style = cfg.style or read_cached_style() or "light"
+  -- Priority: explicit config > cached > vim.o.background > default "light"
+  local style = cfg.style
+    or read_cached_style()
+    or (vim.o.background == "dark" and "dark")
+    or "light"
   local c = M.colors[style] or M.colors.light
 
-  vim.o.background = style == "dark" and "dark" or "light"
+  if (style == "dark" and vim.o.background ~= "dark")
+    or (style == "light" and vim.o.background ~= "light") then
+    vim.o.background = style == "dark" and "dark" or "light"
+  end
 
   local bg = cfg.transparent and "NONE" or c.bg
+  local float_bg = cfg.transparent and "NONE" or c.line_highlight
   local comment_style = cfg.italic_comments and { fg = c.comment, italic = true } or { fg = c.comment }
 
   local highlights = {
     Normal = { fg = c.fg, bg = bg },
-    NormalFloat = { fg = c.fg, bg = cfg.transparent and "NONE" or c.line_highlight },
+    NormalFloat = { fg = c.fg, bg = float_bg },
     Comment = comment_style,
 
     Constant = { fg = c.constant },
@@ -209,7 +215,7 @@ function M.setup(opts)
     Error = { fg = c.invalid_fg, bg = c.invalid_bg },
     Todo = { fg = c.comment },
 
-    CursorLine = { bg = cfg.transparent and "NONE" or c.line_highlight },
+    CursorLine = { bg = float_bg },
     CursorLineNr = { fg = c.fg },
     LineNr = { fg = c.line_number },
     SignColumn = { bg = bg },
@@ -217,9 +223,9 @@ function M.setup(opts)
     Visual = { bg = c.visual },
     VisualNOS = { bg = c.visual },
 
-    Pmenu = { fg = c.fg, bg = c.line_highlight },
+    Pmenu = { fg = c.fg, bg = float_bg },
     PmenuSel = { fg = c.fg, bg = c.selection_highlight },
-    PmenuSbar = { bg = c.line_highlight },
+    PmenuSbar = { bg = float_bg },
     PmenuThumb = { bg = c.punctuation },
 
     StatusLine = { fg = c.statusline_fg, bg = c.statusline_bg },
@@ -237,8 +243,8 @@ function M.setup(opts)
     WinBarNC = { fg = c.line_number, bg = bg },
 
     -- Floating Windows
-    FloatBorder = { fg = c.line_number, bg = cfg.transparent and "NONE" or c.line_highlight },
-    FloatTitle = { fg = c.fg, bg = cfg.transparent and "NONE" or c.line_highlight },
+    FloatBorder = { fg = c.line_number, bg = float_bg },
+    FloatTitle = { fg = c.fg, bg = float_bg },
 
     -- Tab Line
     TabLine = { fg = c.line_number, bg = c.statusline_bg },
@@ -246,7 +252,7 @@ function M.setup(opts)
     TabLineSel = { fg = c.fg, bg = bg },
 
     -- Folding
-    Folded = { fg = c.line_number, bg = c.line_highlight },
+    Folded = { fg = c.line_number, bg = float_bg },
     FoldColumn = { fg = c.line_number, bg = bg },
 
     -- Messages & Command Line
@@ -265,10 +271,10 @@ function M.setup(opts)
     Conceal = { fg = c.punctuation },
 
     -- Columns & Lines
-    ColorColumn = { bg = c.line_highlight },
-    CursorColumn = { bg = c.line_highlight },
-    CursorLineFold = { fg = c.line_number, bg = c.line_highlight },
-    CursorLineSign = { bg = c.line_highlight },
+    ColorColumn = { bg = float_bg },
+    CursorColumn = { bg = float_bg },
+    CursorLineFold = { fg = c.line_number, bg = float_bg },
+    CursorLineSign = { bg = float_bg },
 
     -- Navigation & Selection
     Directory = { fg = c.entity },
@@ -322,7 +328,7 @@ function M.setup(opts)
     -- LSP Codelens & Inlay Hints
     LspCodeLens = { fg = c.line_number },
     LspCodeLensSeparator = { fg = c.line_number },
-    LspInlayHint = { fg = c.line_number, bg = c.line_highlight },
+    LspInlayHint = { fg = c.line_number, bg = float_bg },
 
     -- Treesitter
     ["@comment"] = comment_style,
@@ -412,7 +418,7 @@ function M.setup(opts)
     ["@lsp.type.type"] = { fg = c.fg },
     ["@lsp.type.typeParameter"] = { fg = c.entity },
     ["@lsp.type.variable"] = { fg = c.fg },
-    ["@lsp.type.comment"] = { link = "@comment" },
+    ["@lsp.type.comment"] = { link = "Comment" },
     ["@lsp.mod.deprecated"] = { strikethrough = true },
     ["@lsp.mod.readonly"] = { fg = c.constant },
     ["@lsp.mod.defaultLibrary"] = { link = "@variable.builtin" },

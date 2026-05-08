@@ -7,7 +7,7 @@ A port of the [Alabaster theme](https://github.com/tonsky/vscode-theme-alabaster
 Alabaster is a minimal color scheme that only highlights:
 - **Strings** (green)
 - **Constants** (purple) - numbers, characters, symbols, booleans
-- **Comments** (red) - prominently displayed, not dimmed
+- **Comments** (muted gray) - de-emphasized so code stays the focus
 - **Global definitions** (blue) - function names, tags
 
 Keywords like `if`, `else`, `function`, etc. are left unhighlighted as they're self-evident.
