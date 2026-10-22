@@ -5,18 +5,20 @@ background = #0E1415
 foreground = #CECECE
 
 cursor-color = #6199D9
+cursor-text = #0E1415
 selection-background = #1C3D5C
 selection-foreground = #CECECE
 
 # ANSI Colors (0-7)
-palette = 0=#000000
+# Lift ANSI black so text stays visible on the dark background.
+palette = 0=#5B6668
 palette = 1=#D96468
 palette = 2=#91B362
 palette = 3=#D9B76C
 palette = 4=#6199D9
 palette = 5=#B77FDB
 palette = 6=#5AAEBD
-palette = 7=#BBBBBB
+palette = 7=#CECECE
 
 # Bright Colors (8-15)
 palette = 8=#666666

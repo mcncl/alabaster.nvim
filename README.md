@@ -125,6 +125,22 @@ session. An explicit `setup({ style = ... })` takes precedence at startup.
 - **Functions/Entities**: `#325CC0` (blue)
 - **Punctuation**: `#777777` (gray)
 
+## Ghostty
+
+Copy the files in `extras/ghostty/` to `~/.config/ghostty/themes/`, then add
+this to your Ghostty configuration:
+
+```ini
+theme = light:alabaster-light,dark:alabaster-dark
+```
+
+The light terminal palette uses darker ANSI shades for readable text on its
+light background. The dark palette lifts ANSI black to a visible gray.
+In both palettes, all 16 ANSI colors have at least 3:1 contrast against their
+opaque theme background. This does not change true-color output from Neovim
+or other applications. Transparency and application-selected backgrounds can
+change the resulting contrast.
+
 ## Tests
 
 Run the regression checks from the repository root with Neovim 0.9+:
