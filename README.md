@@ -141,16 +141,6 @@ opaque theme background. This does not change true-color output from Neovim
 or other applications. Transparency and application-selected backgrounds can
 change the resulting contrast.
 
-## Tests
-
-Run the regression checks from the repository root with Neovim 0.9+:
-
-```sh
-nvim --clean --headless -l tests/theme.lua
-```
-
-The checks use a temporary cache and do not change your saved style.
-
 ## Credits
 
 Original theme by [Nikita Prokopov](https://github.com/tonsky)

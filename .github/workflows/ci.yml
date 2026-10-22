@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  neovim:
+    name: Neovim (${{ matrix.version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [v0.9.5, stable]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: rhysd/action-setup-vim@febef33995d6649302e9d88dda81e071b68f16a7 # v1
+        with:
+          neovim: true
+          version: ${{ matrix.version }}
+      - run: nvim --version
+      - run: nvim --clean --headless -l tests/theme.lua
+
+  checks:
+    name: Formatting and palettes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: JohnnyMorganz/stylua-action@479972f01e665acfcba96ada452c36608bdbbb5e # v4
+        with:
+          token: ${{ github.token }}
+          version: v2.6.0
+          args: --check lua tests
+      - name: Check Ghostty palettes
+        run: python3 tests/ghostty.py
+
+  ghostty:
+    name: Ghostty configuration
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - name: Detect theme or workflow changes
+        id: changes
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ "$BASE_SHA" =~ ^0+$ ]] ||
+            ! git diff --quiet "$BASE_SHA" HEAD -- extras/ghostty/ .github/workflows/ci.yml; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install Ghostty
+        if: steps.changes.outputs.changed == 'true'
+        run: brew install --cask ghostty
+      - name: Validate Ghostty themes
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          /Applications/Ghostty.app/Contents/MacOS/ghostty +version
+          for theme in extras/ghostty/alabaster-*; do
+            /Applications/Ghostty.app/Contents/MacOS/ghostty +validate-config --config-file="$PWD/$theme"
+          done
