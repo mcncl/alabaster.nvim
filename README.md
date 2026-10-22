@@ -144,3 +144,7 @@ change the resulting contrast.
 ## Credits
 
 Original theme by [Nikita Prokopov](https://github.com/tonsky)
+
+## License
+
+Licensed under the [MIT License](LICENSE).
