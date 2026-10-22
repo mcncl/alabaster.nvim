@@ -1,7 +1,7 @@
 local M = {}
 
 M.config = {
-  style = nil, -- nil means: check cache, then default to "light"
+  style = nil, -- nil means: check cache, then use vim.o.background
   transparent = false,
   italic_comments = false,
 }
@@ -25,7 +25,9 @@ end
 
 local function write_cached_style(style)
   local cache_dir = vim.fn.stdpath("cache")
-  vim.fn.mkdir(cache_dir, "p")
+  if not pcall(vim.fn.mkdir, cache_dir, "p") then
+    return
+  end
   local path = get_cache_path()
   local file = io.open(path, "w")
   if file then
@@ -143,27 +145,23 @@ M.colors = {
 }
 
 function M.setup(opts)
-  M.config = vim.tbl_deep_extend("force", M.config, opts or {})
+  local cfg = vim.tbl_deep_extend("force", M.config, opts or {})
+  assert(cfg.style == nil or cfg.style == "light" or cfg.style == "dark", 'Alabaster: style must be "light" or "dark"')
+  M.config = cfg
 
   vim.cmd("hi clear")
-  if vim.fn.exists("syntax_on") then
+  if vim.fn.exists("syntax_on") == 1 then
     vim.cmd("syntax reset")
   end
 
+  -- Priority: explicit config > cached > vim.o.background
+  local style = cfg.style or read_cached_style() or vim.o.background
+  local c = M.colors[style]
+
+  -- Changing 'background' must not reload the colorscheme during setup.
+  vim.g.colors_name = nil
+  vim.o.background = style
   vim.g.colors_name = "alabaster"
-
-  local cfg = M.config
-  -- Priority: explicit config > cached > vim.o.background > default "light"
-  local style = cfg.style
-    or read_cached_style()
-    or (vim.o.background == "dark" and "dark")
-    or "light"
-  local c = M.colors[style] or M.colors.light
-
-  if (style == "dark" and vim.o.background ~= "dark")
-    or (style == "light" and vim.o.background ~= "light") then
-    vim.o.background = style == "dark" and "dark" or "light"
-  end
 
   local bg = cfg.transparent and "NONE" or c.bg
   local float_bg = cfg.transparent and "NONE" or c.line_highlight
@@ -286,7 +284,7 @@ function M.setup(opts)
     DiffAdd = { bg = c.diff_add_bg, fg = c.diff_text },
     DiffChange = { bg = c.diff_change_bg, fg = c.diff_text },
     DiffDelete = { bg = c.diff_delete_bg, fg = c.diff_text },
-    DiffText = { bg = c.diff_change_bg, fg = c.diff_text },
+    DiffText = { bg = c.selection, fg = c.diff_text },
 
     -- Spelling
     SpellBad = { undercurl = true, sp = c.invalid_fg },
@@ -337,6 +335,7 @@ function M.setup(opts)
     ["@string.regexp"] = { link = "String" },
     ["@number"] = { link = "Number" },
     ["@boolean"] = { link = "Boolean" },
+    ["@character"] = { link = "Character" },
     ["@constant"] = { link = "Constant" },
     ["@constant.builtin"] = { link = "Constant" },
     ["@function"] = { link = "Function" },
@@ -362,6 +361,7 @@ function M.setup(opts)
     ["@keyword.clojure"] = { fg = c.constant },
     ["@namespace"] = { fg = c.entity },
     ["@function.call"] = { fg = c.fg },
+    ["@function.method.call"] = { fg = c.fg },
     ["@method.call"] = { fg = c.fg },
     ["@type.definition"] = { fg = c.entity },
     ["@type.qualifier"] = { fg = c.fg },
@@ -630,23 +630,15 @@ function M.setup(opts)
   -- Create user command
   vim.api.nvim_create_user_command("Alabaster", function(opts)
     local arg = opts.args:lower()
-    local current_style = M.config.style or read_cached_style() or "light"
-    if arg == "dark" then
-      M.config.style = "dark"
-      write_cached_style("dark")
-      M.setup(M.config)
-    elseif arg == "light" then
-      M.config.style = "light"
-      write_cached_style("light")
-      M.setup(M.config)
-    elseif arg == "toggle" then
-      local new_style = current_style == "dark" and "light" or "dark"
-      M.config.style = new_style
-      write_cached_style(new_style)
-      M.setup(M.config)
-    else
-      print("Alabaster: usage - :Alabaster [dark|light|toggle]")
+    if arg == "toggle" then
+      arg = style == "dark" and "light" or "dark"
     end
+    if arg ~= "dark" and arg ~= "light" then
+      print("Alabaster: usage - :Alabaster [dark|light|toggle]")
+      return
+    end
+    M.setup({ style = arg })
+    write_cached_style(arg)
   end, {
     nargs = 1,
     complete = function()

@@ -44,12 +44,12 @@ use {
 Plug 'mcncl/alabaster.nvim'
 ```
 
-### Using [pack](https://neovim.io/doc/user/pack.html)
+### Using [vim.pack](https://neovim.io/doc/user/pack.html) (Neovim 0.12+)
 
-```vim
-{
-  src = 'mcncl/alabaster.nvim',
-}
+```lua
+vim.pack.add({
+  { src = 'https://github.com/mcncl/alabaster.nvim' },
+})
 ```
 
 Then add to your `init.vim` or `init.lua`:
@@ -78,13 +78,20 @@ You can customize the theme with optional settings:
 
 ```lua
 require('alabaster').setup({
-  style = "light",          -- "light" or "dark"
+  style = nil,              -- "light", "dark", or nil for automatic selection
   transparent = false,      -- Enable transparent background
   italic_comments = false,  -- Enable italic comments
 })
 
 vim.cmd.colorscheme('alabaster')
 ```
+
+With no explicit style, Alabaster uses the last style saved by `:Alabaster`,
+then falls back to Neovim's `background` option. An invalid style reports an
+error without changing the active theme.
+
+Use a true-color terminal and enable `vim.opt.termguicolors = true` to display
+the palette accurately.
 
 ### Dark Mode
 
@@ -95,6 +102,11 @@ require('alabaster').setup({
 
 vim.cmd.colorscheme('alabaster')
 ```
+
+Switch styles with `:Alabaster light`, `:Alabaster dark`, or `:Alabaster toggle`.
+These commands save the choice to `stdpath('cache') .. '/alabaster'` for future
+sessions. If the cache cannot be written, the style still changes for the current
+session. An explicit `setup({ style = ... })` takes precedence at startup.
 
 ## Features
 
@@ -112,6 +124,16 @@ vim.cmd.colorscheme('alabaster')
 - **Constants**: `#7A3E9D` (purple)
 - **Functions/Entities**: `#325CC0` (blue)
 - **Punctuation**: `#777777` (gray)
+
+## Tests
+
+Run the regression checks from the repository root with Neovim 0.9+:
+
+```sh
+nvim --clean --headless -l tests/theme.lua
+```
+
+The checks use a temporary cache and do not change your saved style.
 
 ## Credits
 
