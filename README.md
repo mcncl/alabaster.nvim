@@ -2,6 +2,8 @@
 
 A port of the [Alabaster theme](https://github.com/tonsky/vscode-theme-alabaster) for Neovim. A light, minimal theme that highlights what matters.
 
+![Alabaster light and dark palettes on the same Lua example, split diagonally over a stone-textured background](assets/alabaster.png)
+
 ## Philosophy
 
 Alabaster is a minimal color scheme that only highlights:
